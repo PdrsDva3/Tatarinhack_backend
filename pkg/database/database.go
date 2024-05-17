@@ -1,7 +1,7 @@
 package database
 
 import (
-	"awesomeProject1/pkg/config"
+	"Tatarinhack_backend/pkg/config"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
