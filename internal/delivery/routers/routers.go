@@ -12,4 +12,5 @@ func InitRouting(r *gin.Engine, db *sqlx.DB, logger *logger.Logs, middlewareStru
 	_ = RegisterAnswerRouter(r, db, logger)
 	_ = RegisterQuestionRouter(r, db, logger)
 	_ = RegisterTestRouter(r, db, logger)
+	_ = RegisterCourseRouter(r, db, logger)
 }

@@ -12,3 +12,8 @@ type Course struct {
 	CourseBase
 	ID int `json:"id"`
 }
+
+type CourseAdd struct {
+	IDTest   int `json:"id_test"`
+	IDCourse int `json:"id_course"`
+}

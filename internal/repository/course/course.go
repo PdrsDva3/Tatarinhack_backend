@@ -43,28 +43,27 @@ func (cou RepositoryCourse) Create(ctx context.Context, cour entities.CourseBase
 
 func (cou RepositoryCourse) GetByID(ctx context.Context, id int) (*entities.Course, error) {
 	var course entities.Course
-	rows := cou.db.QueryRowContext(ctx, `SELECT (name, level, description) from courses WHERE id = $1;`, id)
+	rows := cou.db.QueryRowContext(ctx, `SELECT name, level, description from courses WHERE id = $1;`, id)
 	err := rows.Scan(&course.Name, &course.Level, &course.Description)
 	if err != nil {
 		return nil, cerr.Err(cerr.Test, cerr.Repository, cerr.Scan, err).Error()
 	}
 	course.ID = id
 	var ids []int
-	rowss := cou.db.QueryRowxContext(ctx, `SELECT id_tests FROM courses_tests WHERE id_courses = $1;`, id)
-	err = rowss.Scan(&ids)
-	if err != nil {
-		return nil, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
-	}
+	var tst entities.TestGet
 
+	err = cou.db.SelectContext(ctx, &ids, "SELECT id_tests FROM courses_tests where id_courses=$1", id)
+	if err != nil {
+		return nil, cerr.Err(cerr.Test, cerr.Repository, cerr.Scan, err).Error()
+	}
 	for _, i := range ids {
-		var question entities.TestGet
 		rows := cou.db.QueryRowContext(ctx, `SELECT name from tests WHERE id = $1;`, i)
-		err := rows.Scan(&question.Name)
+		err := rows.Scan(&tst.Name)
 		if err != nil {
 			return nil, cerr.Err(cerr.Test, cerr.Repository, cerr.Scan, err).Error()
 		}
-		question.ID = i
-		course.Tests = append(course.Tests, question)
+		tst.ID = i
+		course.Tests = append(course.Tests, tst)
 	}
 	return &course, nil
 }

@@ -31,7 +31,7 @@ func (tst TestService) Create(ctx context.Context, test entities.TestBase) (int,
 	return id, nil
 }
 
-func (tst TestService) AddTest(ctx context.Context, queID int, testID int) error {
+func (tst TestService) AddQue(ctx context.Context, queID int, testID int) error {
 	err := tst.TestRepo.AddQ(ctx, testID, queID)
 	if err != nil {
 		return err

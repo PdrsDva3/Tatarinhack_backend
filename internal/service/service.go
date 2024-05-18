@@ -28,5 +28,11 @@ type QuestionService interface {
 type TestService interface {
 	Create(ctx context.Context, test entities.TestBase) (int, error)
 	GetMe(ctx context.Context, testID int) (*entities.Test, error)
-	AddTest(ctx context.Context, queID int, testID int) error
+	AddQue(ctx context.Context, queID int, testID int) error
+}
+
+type CourseService interface {
+	Create(ctx context.Context, course entities.CourseBase) (int, error)
+	GetMe(ctx context.Context, courseID int) (*entities.Course, error)
+	AddTest(ctx context.Context, courseID int, testID int) error
 }

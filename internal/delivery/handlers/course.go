@@ -10,29 +10,29 @@ import (
 	"time"
 )
 
-type TestHandler struct {
-	service service.TestService
+type CourseHandler struct {
+	service service.CourseService
 }
 
-func InitTestHandler(service service.TestService) TestHandler {
-	return TestHandler{
+func InitCourseHandler(service service.CourseService) CourseHandler {
+	return CourseHandler{
 		service: service,
 	}
 }
 
-// @Summary Create test
-// @Tags test
+// @Summary Create course
+// @Tags course
 // @Accept  json
 // @Produce  json
-// @Param data body entities.TestBase true "test create"
-// @Success 200 {object} int "Successfully created test"
+// @Param data body entities.CourseBase true "course create"
+// @Success 200 {object} int "Successfully created course"
 // @Failure 400 {object} map[string]string "Invalid input"
 // @Failure 500 {object} map[string]string "Internal server error"
-// @Router /test/create [post]
-func (p TestHandler) CreateTest(c *gin.Context) {
-	var QueCreate entities.TestBase
+// @Router /course/create [post]
+func (p CourseHandler) CreateCourse(c *gin.Context) {
+	var create entities.CourseBase
 
-	if err := c.ShouldBindJSON(&QueCreate); err != nil {
+	if err := c.ShouldBindJSON(&create); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -40,7 +40,7 @@ func (p TestHandler) CreateTest(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*4)
 	defer cancel()
 
-	id, err := p.service.Create(ctx, QueCreate)
+	id, err := p.service.Create(ctx, create)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -49,19 +49,19 @@ func (p TestHandler) CreateTest(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"id": id})
 }
 
-// @Summary Add que to test
-// @Tags test
+// @Summary Add test to course
+// @Tags course
 // @Accept  json
 // @Produce  json
-// @Param data body entities.TestAdd true "test add que"
-// @Success 200 {object} int "Successfully add test"
+// @Param data body entities.CourseAdd true "course add test"
+// @Success 200 {object} int "Successfully add course"
 // @Failure 400 {object} map[string]string "Invalid input"
 // @Failure 500 {object} map[string]string "Internal server error"
-// @Router /test/add [put]
-func (p TestHandler) AddTest(c *gin.Context) {
-	var QueChange entities.TestAdd
+// @Router /course/add [put]
+func (p CourseHandler) AddCourse(c *gin.Context) {
+	var change entities.CourseAdd
 
-	if err := c.ShouldBindJSON(&QueChange); err != nil {
+	if err := c.ShouldBindJSON(&change); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -69,7 +69,7 @@ func (p TestHandler) AddTest(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*4)
 	defer cancel()
 
-	err := p.service.AddQue(ctx, QueChange.IDQuestion, QueChange.IDTest)
+	err := p.service.AddTest(ctx, change.IDCourse, change.IDTest)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -78,16 +78,16 @@ func (p TestHandler) AddTest(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"add": "success"})
 }
 
-// @Summary Get test
-// @Tags test
+// @Summary Get course
+// @Tags course
 // @Accept  json
 // @Produce  json
-// @Param id query int true "TestID"
-// @Success 200 {object} int "Successfully get test"
+// @Param id query int true "CourseID"
+// @Success 200 {object} int "Successfully get course"
 // @Failure 400 {object} map[string]string "Invalid input"
 // @Failure 500 {object} map[string]string "Internal server error"
-// @Router /test/{id} [get]
-func (p TestHandler) GetTest(c *gin.Context) {
+// @Router /course/{id} [get]
+func (p CourseHandler) GetCourse(c *gin.Context) {
 	id := c.Query("id")
 	aid, err := strconv.Atoi(id)
 	if err != nil {

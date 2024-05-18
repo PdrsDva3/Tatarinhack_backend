@@ -37,6 +37,6 @@ type TestRepo interface {
 type CourseRepo interface {
 	Create(ctx context.Context, question entities.CourseBase) (int, error)
 	GetByID(ctx context.Context, id int) (*entities.Course, error)
-	AddT(ctx context.Context, idTest int, idQue int) error
+	AddT(ctx context.Context, idTest int, idCourse int) error
 	DeleteT(ctx context.Context, idTest int, idQue int) error
 }
