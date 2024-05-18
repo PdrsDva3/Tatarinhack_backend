@@ -98,6 +98,40 @@ definitions:
       type:
         type: string
     type: object
+  entities.UserAddFriend:
+    properties:
+      friend_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  entities.UserChangePassword:
+    properties:
+      id:
+        type: integer
+      password:
+        type: string
+    type: object
+  entities.UserCreate:
+    properties:
+      email:
+        type: string
+      goal:
+        type: string
+      nick:
+        type: string
+      password:
+        type: string
+      sex:
+        type: string
+    type: object
+  entities.UserLogin:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -558,4 +592,424 @@ paths:
       summary: Create test
       tags:
       - test
+  /user/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: friend added
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.UserAddFriend'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully add friend
+          schema:
+            type: integer
+        "400":
+          description: Invalid IDs
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Adding friend
+      tags:
+      - friend
+  /user/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: user create
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.UserCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully created user
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create user
+      tags:
+      - user
+  /user/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: UserID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully deleted
+          schema:
+            type: integer
+        "400":
+          description: Invalid id
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete user
+      tags:
+      - user
+  /user/get/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: UserID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully get user
+          schema:
+            type: integer
+        "400":
+          description: Invalid UserID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get user
+      tags:
+      - user
+  /user/get/friend/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: FriendID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully get friend
+          schema:
+            type: integer
+        "400":
+          description: Invalid friendID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get friend
+      tags:
+      - friend
+  /user/get/friend/lst/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: UserID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully get FriendsList
+          schema:
+            type: integer
+        "400":
+          description: Invalid UserID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get FriendsList
+      tags:
+      - user
+  /user/get/man/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: ManID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully get man
+          schema:
+            type: integer
+        "400":
+          description: Invalid manID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get man
+      tags:
+      - man
+  /user/gram/{id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: UserID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: integer
+        "400":
+          description: Invalid id
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update grammar
+      tags:
+      - user
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: user login
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.UserLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully login user
+          schema:
+            type: integer
+        "400":
+          description: Invalid password
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login user
+      tags:
+      - user
+  /user/lvl/{id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: UserID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: integer
+        "400":
+          description: Invalid id
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update level
+      tags:
+      - user
+  /user/pwd:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: change password
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.UserChangePassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success changing
+          schema:
+            type: integer
+        "400":
+          description: Invalid id
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Change password
+      tags:
+      - user
+  /user/speak/{id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: UserID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: integer
+        "400":
+          description: Invalid id
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update speaking
+      tags:
+      - user
+  /user/voc/{id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: UserID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: integer
+        "400":
+          description: Invalid id
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update vocabulary
+      tags:
+      - user
 swagger: "2.0"
