@@ -19,7 +19,7 @@ func GetDB() *sqlx.DB {
 	)
 	db, err := sqlx.Connect("postgres", connString)
 	if err != nil {
-		panic(fmt.Sprintf("Error while connecting to DB. Error: %v", err.Error()))
+		panic(fmt.Sprintf("Error while connecting to DB. Error: %v, %v", err.Error(), viper.GetString(config.DBHost)))
 	}
 
 	return db
