@@ -15,8 +15,8 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/user/add": {
-            "post": {
+        "/answer/change": {
+            "put": {
                 "consumes": [
                     "application/json"
                 ],
@@ -24,74 +24,23 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "friend"
+                    "answer"
                 ],
-                "summary": "Adding friend",
+                "summary": "Change iscorrect answer",
                 "parameters": [
                     {
-                        "description": "friend added",
+                        "description": "answer change",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entities.UserAddFriend"
+                            "$ref": "#/definitions/entities.AnswerChange"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successfully add friend",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid IDs",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/user/create": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "Create user",
-                "parameters": [
-                    {
-                        "description": "user create",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/entities.UserCreate"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully created user",
+                        "description": "Successfully change answer",
                         "schema": {
                             "type": "integer"
                         }
@@ -117,301 +66,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/delete/{id}": {
-            "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "Delete user",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "UserID",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully deleted",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid id",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/user/get/friend/lst/{id}": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "Get FriendsList",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "UserID",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully get FriendsList",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid UserID",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/user/get/friend/{id}": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "friend"
-                ],
-                "summary": "Get friend",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "FriendID",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully get friend",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid friendID",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/user/get/man/{id}": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "man"
-                ],
-                "summary": "Get man",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ManID",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully get man",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid manID",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/user/get/{id}": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "Get user",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "UserID",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully get user",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid UserID",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/user/gram/{id}": {
-            "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "Update grammar",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "UserID",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid id",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/user/login": {
+        "/answer/create": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -420,29 +75,29 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "answer"
                 ],
-                "summary": "Login user",
+                "summary": "Create answer",
                 "parameters": [
                     {
-                        "description": "user login",
+                        "description": "answer create",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entities.UserLogin"
+                            "$ref": "#/definitions/entities.AnswerBase"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successfully login user",
+                        "description": "Successfully created answer",
                         "schema": {
                             "type": "integer"
                         }
                     },
                     "400": {
-                        "description": "Invalid password",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -462,8 +117,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/lvl/{id}": {
-            "put": {
+        "/answer/{id}": {
+            "get": {
                 "consumes": [
                     "application/json"
                 ],
@@ -471,13 +126,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "answer"
                 ],
-                "summary": "Update level",
+                "summary": "Get answer",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "UserID",
+                        "description": "AnswerID",
                         "name": "id",
                         "in": "query",
                         "required": true
@@ -485,13 +140,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "Successfully get answer",
                         "schema": {
                             "type": "integer"
                         }
                     },
                     "400": {
-                        "description": "Invalid id",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -511,7 +166,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/pwd": {
+        "/question/add": {
             "put": {
                 "consumes": [
                     "application/json"
@@ -520,29 +175,29 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "Que"
                 ],
-                "summary": "Change password",
+                "summary": "Add Answer to Que",
                 "parameters": [
                     {
-                        "description": "change password",
+                        "description": "Que add ans",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entities.UserChangePassword"
+                            "$ref": "#/definitions/entities.QuestionAdd"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success changing",
+                        "description": "Successfully add ans",
                         "schema": {
                             "type": "integer"
                         }
                     },
                     "400": {
-                        "description": "Invalid id",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -562,8 +217,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/speak/{id}": {
-            "put": {
+        "/question/create": {
+            "post": {
                 "consumes": [
                     "application/json"
                 ],
@@ -571,27 +226,29 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "Que"
                 ],
-                "summary": "Update speaking",
+                "summary": "Create Que",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "UserID",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
+                        "description": "Que create",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.QuestionBase"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "Successfully created Que",
                         "schema": {
                             "type": "integer"
                         }
                     },
                     "400": {
-                        "description": "Invalid id",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -611,7 +268,56 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/voc/{id}": {
+        "/question/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Que"
+                ],
+                "summary": "Get Que",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "QueID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully get Que",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/teach/change": {
             "put": {
                 "consumes": [
                     "application/json"
@@ -620,13 +326,115 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "teach"
                 ],
-                "summary": "Update vocabulary",
+                "summary": "ChangePWD teach",
+                "parameters": [
+                    {
+                        "description": "teach change pwd",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.TeachChangePassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully change pwd",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/teach/create": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "teach"
+                ],
+                "summary": "Create teach",
+                "parameters": [
+                    {
+                        "description": "teach create",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.TeachCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully created teach",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/teach/delete/{id}": {
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "teach"
+                ],
+                "summary": "Delete teach",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "UserID",
+                        "description": "TeachID",
                         "name": "id",
                         "in": "query",
                         "required": true
@@ -634,13 +442,264 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "Successfully delete teach",
                         "schema": {
                             "type": "integer"
                         }
                     },
                     "400": {
-                        "description": "Invalid id",
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/teach/login": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "teach"
+                ],
+                "summary": "Login teach",
+                "parameters": [
+                    {
+                        "description": "teach login",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.TeachLogin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully login teach",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/teach/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "teach"
+                ],
+                "summary": "Get teach",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TeachID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully get teach",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/test/add": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "summary": "Add que to test",
+                "parameters": [
+                    {
+                        "description": "test add que",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.TestAdd"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully add test",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/test/create": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "summary": "Create test",
+                "parameters": [
+                    {
+                        "description": "test create",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.TestBase"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully created test",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/test/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "summary": "Get test",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TestID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully get test",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -662,18 +721,91 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "entities.UserAddFriend": {
+        "entities.Ans": {
             "type": "object",
             "properties": {
-                "friend_id": {
+                "id": {
                     "type": "integer"
                 },
-                "user_id": {
+                "isCorrect": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.AnswerBase": {
+            "type": "object",
+            "properties": {
+                "isCorrect": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.AnswerChange": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "value": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "entities.Question": {
+            "type": "object",
+            "properties": {
+                "answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entities.Ans"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.QuestionAdd": {
+            "type": "object",
+            "properties": {
+                "id_answer": {
+                    "type": "integer"
+                },
+                "id_question": {
                     "type": "integer"
                 }
             }
         },
-        "entities.UserChangePassword": {
+        "entities.QuestionBase": {
+            "type": "object",
+            "properties": {
+                "answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entities.Ans"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.TeachChangePassword": {
             "type": "object",
             "properties": {
                 "id": {
@@ -684,13 +816,10 @@ const docTemplate = `{
                 }
             }
         },
-        "entities.UserCreate": {
+        "entities.TeachCreate": {
             "type": "object",
             "properties": {
                 "email": {
-                    "type": "string"
-                },
-                "goal": {
                     "type": "string"
                 },
                 "nick": {
@@ -698,19 +827,50 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
-                },
-                "sex": {
-                    "type": "string"
                 }
             }
         },
-        "entities.UserLogin": {
+        "entities.TeachLogin": {
             "type": "object",
             "properties": {
                 "email": {
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.TestAdd": {
+            "type": "object",
+            "properties": {
+                "id_question": {
+                    "type": "integer"
+                },
+                "id_test": {
+                    "type": "integer"
+                }
+            }
+        },
+        "entities.TestBase": {
+            "type": "object",
+            "properties": {
+                "level": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entities.Question"
+                    }
+                },
+                "speed": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 }
             }

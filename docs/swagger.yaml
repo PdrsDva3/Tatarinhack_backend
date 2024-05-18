@@ -1,90 +1,121 @@
 definitions:
-  entities.UserAddFriend:
+  entities.Ans:
     properties:
-      friend_id:
+      id:
         type: integer
-      user_id:
+      isCorrect:
+        type: boolean
+      name:
+        type: string
+    type: object
+  entities.AnswerBase:
+    properties:
+      isCorrect:
+        type: boolean
+      name:
+        type: string
+    type: object
+  entities.AnswerChange:
+    properties:
+      id:
+        type: integer
+      value:
+        type: boolean
+    type: object
+  entities.Question:
+    properties:
+      answers:
+        items:
+          $ref: '#/definitions/entities.Ans'
+        type: array
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  entities.QuestionAdd:
+    properties:
+      id_answer:
+        type: integer
+      id_question:
         type: integer
     type: object
-  entities.UserChangePassword:
+  entities.QuestionBase:
+    properties:
+      answers:
+        items:
+          $ref: '#/definitions/entities.Ans'
+        type: array
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+  entities.TeachChangePassword:
     properties:
       id:
         type: integer
       password:
         type: string
     type: object
-  entities.UserCreate:
+  entities.TeachCreate:
     properties:
       email:
-        type: string
-      goal:
         type: string
       nick:
         type: string
       password:
         type: string
-      sex:
-        type: string
     type: object
-  entities.UserLogin:
+  entities.TeachLogin:
     properties:
       email:
         type: string
       password:
         type: string
     type: object
+  entities.TestAdd:
+    properties:
+      id_question:
+        type: integer
+      id_test:
+        type: integer
+    type: object
+  entities.TestBase:
+    properties:
+      level:
+        type: integer
+      name:
+        type: string
+      questions:
+        items:
+          $ref: '#/definitions/entities.Question'
+        type: array
+      speed:
+        type: string
+      type:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
-  /user/add:
-    post:
+  /answer/{id}:
+    get:
       consumes:
       - application/json
       parameters:
-      - description: friend added
-        in: body
-        name: data
+      - description: AnswerID
+        in: query
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/entities.UserAddFriend'
+        type: integer
       produces:
       - application/json
       responses:
         "200":
-          description: Successfully add friend
-          schema:
-            type: integer
-        "400":
-          description: Invalid IDs
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal server error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Adding friend
-      tags:
-      - friend
-  /user/create:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: user create
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/entities.UserCreate'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully created user
+          description: Successfully get answer
           schema:
             type: integer
         "400":
@@ -99,188 +130,29 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Create user
+      summary: Get answer
       tags:
-      - user
-  /user/delete/{id}:
-    delete:
-      consumes:
-      - application/json
-      parameters:
-      - description: UserID
-        in: query
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully deleted
-          schema:
-            type: integer
-        "400":
-          description: Invalid id
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal server error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Delete user
-      tags:
-      - user
-  /user/get/{id}:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: UserID
-        in: query
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully get user
-          schema:
-            type: integer
-        "400":
-          description: Invalid UserID
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal server error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Get user
-      tags:
-      - user
-  /user/get/friend/{id}:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: FriendID
-        in: query
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully get friend
-          schema:
-            type: integer
-        "400":
-          description: Invalid friendID
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal server error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Get friend
-      tags:
-      - friend
-  /user/get/friend/lst/{id}:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: UserID
-        in: query
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully get FriendsList
-          schema:
-            type: integer
-        "400":
-          description: Invalid UserID
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal server error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Get FriendsList
-      tags:
-      - user
-  /user/get/man/{id}:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: ManID
-        in: query
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully get man
-          schema:
-            type: integer
-        "400":
-          description: Invalid manID
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal server error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Get man
-      tags:
-      - man
-  /user/gram/{id}:
+      - answer
+  /answer/change:
     put:
       consumes:
       - application/json
       parameters:
-      - description: UserID
-        in: query
-        name: id
+      - description: answer change
+        in: body
+        name: data
         required: true
-        type: integer
+        schema:
+          $ref: '#/definitions/entities.AnswerChange'
       produces:
       - application/json
       responses:
         "200":
-          description: Success
+          description: Successfully change answer
           schema:
             type: integer
         "400":
-          description: Invalid id
+          description: Invalid input
           schema:
             additionalProperties:
               type: string
@@ -291,29 +163,29 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Update grammar
+      summary: Change iscorrect answer
       tags:
-      - user
-  /user/login:
+      - answer
+  /answer/create:
     post:
       consumes:
       - application/json
       parameters:
-      - description: user login
+      - description: answer create
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/entities.UserLogin'
+          $ref: '#/definitions/entities.AnswerBase'
       produces:
       - application/json
       responses:
         "200":
-          description: Successfully login user
+          description: Successfully created answer
           schema:
             type: integer
         "400":
-          description: Invalid password
+          description: Invalid input
           schema:
             additionalProperties:
               type: string
@@ -324,15 +196,15 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Login user
+      summary: Create answer
       tags:
-      - user
-  /user/lvl/{id}:
-    put:
+      - answer
+  /question/{id}:
+    get:
       consumes:
       - application/json
       parameters:
-      - description: UserID
+      - description: QueID
         in: query
         name: id
         required: true
@@ -341,11 +213,11 @@ paths:
       - application/json
       responses:
         "200":
-          description: Success
+          description: Successfully get Que
           schema:
             type: integer
         "400":
-          description: Invalid id
+          description: Invalid input
           schema:
             additionalProperties:
               type: string
@@ -356,29 +228,29 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Update level
+      summary: Get Que
       tags:
-      - user
-  /user/pwd:
+      - Que
+  /question/add:
     put:
       consumes:
       - application/json
       parameters:
-      - description: change password
+      - description: Que add ans
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/entities.UserChangePassword'
+          $ref: '#/definitions/entities.QuestionAdd'
       produces:
       - application/json
       responses:
         "200":
-          description: Success changing
+          description: Successfully add ans
           schema:
             type: integer
         "400":
-          description: Invalid id
+          description: Invalid input
           schema:
             additionalProperties:
               type: string
@@ -389,15 +261,48 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Change password
+      summary: Add Answer to Que
       tags:
-      - user
-  /user/speak/{id}:
-    put:
+      - Que
+  /question/create:
+    post:
       consumes:
       - application/json
       parameters:
-      - description: UserID
+      - description: Que create
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.QuestionBase'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully created Que
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create Que
+      tags:
+      - Que
+  /teach/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: TeachID
         in: query
         name: id
         required: true
@@ -406,11 +311,11 @@ paths:
       - application/json
       responses:
         "200":
-          description: Success
+          description: Successfully get teach
           schema:
             type: integer
         "400":
-          description: Invalid id
+          description: Invalid input
           schema:
             additionalProperties:
               type: string
@@ -421,15 +326,81 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Update speaking
+      summary: Get teach
       tags:
-      - user
-  /user/voc/{id}:
+      - teach
+  /teach/change:
     put:
       consumes:
       - application/json
       parameters:
-      - description: UserID
+      - description: teach change pwd
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.TeachChangePassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully change pwd
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: ChangePWD teach
+      tags:
+      - teach
+  /teach/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: teach create
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.TeachCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully created teach
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create teach
+      tags:
+      - teach
+  /teach/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: TeachID
         in: query
         name: id
         required: true
@@ -438,11 +409,11 @@ paths:
       - application/json
       responses:
         "200":
-          description: Success
+          description: Successfully delete teach
           schema:
             type: integer
         "400":
-          description: Invalid id
+          description: Invalid input
           schema:
             additionalProperties:
               type: string
@@ -453,7 +424,138 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Update vocabulary
+      summary: Delete teach
       tags:
-      - user
+      - teach
+  /teach/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: teach login
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.TeachLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully login teach
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login teach
+      tags:
+      - teach
+  /test/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: TestID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully get test
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get test
+      tags:
+      - test
+  /test/add:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: test add que
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.TestAdd'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully add test
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Add que to test
+      tags:
+      - test
+  /test/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: test create
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.TestBase'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully created test
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create test
+      tags:
+      - test
 swagger: "2.0"
