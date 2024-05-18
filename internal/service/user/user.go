@@ -6,7 +6,6 @@ import (
 	"Tatarinhack_backend/internal/service"
 	"Tatarinhack_backend/pkg/cerr"
 	"context"
-	"errors"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -106,7 +105,7 @@ func (usr RepositoryUser) GrammarUp(ctx context.Context, id int) error {
 		return err
 	}
 	if amount == 10 {
-		return errors.New("max value")
+		return nil
 	}
 	amount += 1
 	err = usr.UserRepo.UpdateGrammarByID(ctx, id, amount)
@@ -123,7 +122,7 @@ func (usr RepositoryUser) VocabularyUp(ctx context.Context, id int) error {
 		return err
 	}
 	if amount == 10 {
-		return errors.New("max value")
+		return nil
 	}
 	amount += 1
 	err = usr.UserRepo.UpdateVocabularyByID(ctx, id, amount)
@@ -139,7 +138,7 @@ func (usr RepositoryUser) SpeakingUp(ctx context.Context, id int) error {
 		return err
 	}
 	if amount == 10 {
-		return errors.New("max value")
+		return nil
 	}
 
 	amount += 1

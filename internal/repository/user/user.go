@@ -21,7 +21,7 @@ func (usr RepositoryUser) GetLevel(ctx context.Context, id int) (int, error) {
 	var level int
 	rows := usr.db.QueryRowContext(ctx, `SELECT (lvl) FROM users WHERE id = $1;`, id)
 
-	err := rows.Scan(level)
+	err := rows.Scan(&level)
 	if err != nil {
 		return 0, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
 	}
@@ -33,7 +33,7 @@ func (usr RepositoryUser) GetGrammar(ctx context.Context, id int) (int, error) {
 	var grammar int
 	rows := usr.db.QueryRowContext(ctx, `SELECT (grammar) FROM users WHERE id = $1;`, id)
 
-	err := rows.Scan(grammar)
+	err := rows.Scan(&grammar)
 	if err != nil {
 		return 0, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
 	}
@@ -43,9 +43,9 @@ func (usr RepositoryUser) GetGrammar(ctx context.Context, id int) (int, error) {
 
 func (usr RepositoryUser) GetVocabulary(ctx context.Context, id int) (int, error) {
 	var vocabulary int
-	rows := usr.db.QueryRowContext(ctx, `SELECT (vocabulary) FROM users WHERE id = $1;`, id)
+	rows := usr.db.QueryRowContext(ctx, `SELECT vocabulary FROM users WHERE id = $1;`, id)
 
-	err := rows.Scan(vocabulary)
+	err := rows.Scan(&vocabulary)
 	if err != nil {
 		return 0, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
 	}
@@ -57,7 +57,7 @@ func (usr RepositoryUser) GetSpeaking(ctx context.Context, id int) (int, error) 
 	var speaking int
 	rows := usr.db.QueryRowContext(ctx, `SELECT (speaking) FROM users WHERE id = $1;`, id)
 
-	err := rows.Scan(speaking)
+	err := rows.Scan(&speaking)
 	if err != nil {
 		return 0, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
 	}
@@ -73,17 +73,21 @@ func (usr RepositoryUser) GetFriendList(ctx context.Context, id int) ([]entities
 	if err != nil {
 		return nil, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
 	}
-	for _, i := range ids {
-		var friend entities.FriendsList
-		rows := usr.db.QueryRowContext(ctx, `SELECT nick, sex from friends_link WHERE id = $1;`, i)
-		err := rows.Scan(&friend.Nick, &friend.Sex)
-		if err != nil {
-			return nil, cerr.Err(cerr.Question, cerr.Repository, cerr.Scan, err).Error()
+	if ids != nil {
+		for _, i := range ids {
+			var friend entities.FriendsList
+			rows := usr.db.QueryRowContext(ctx, `SELECT nick, sex from friends_link WHERE id = $1;`, i)
+			err := rows.Scan(&friend.Nick, &friend.Sex)
+			if err != nil {
+				return nil, cerr.Err(cerr.Question, cerr.Repository, cerr.Scan, err).Error()
+			}
+			friend.ID = i
+			list = append(list, friend)
 		}
-		friend.ID = i
-		list = append(list, friend)
+		return list, nil
+	} else {
+		return nil, nil
 	}
-	return list, nil
 
 }
 
@@ -144,12 +148,12 @@ func (usr RepositoryUser) Get(ctx context.Context, id int) (*entities.User, erro
 func (usr RepositoryUser) GetFriendByID(ctx context.Context, id int) (*entities.Friend, error) {
 	var Friend entities.Friend
 
-	rows := usr.db.QueryRowContext(ctx, `SELECT (nick, sex, achievement, lvl, grammar, vocabulary, speaking) FROM users WHERE id = $1;`, id)
+	rows := usr.db.QueryRowContext(ctx, `SELECT nick, sex, achievement, lvl, grammar, vocabulary, speaking FROM users WHERE id = $1;`, id)
 	err := rows.Scan(&Friend.Nick, &Friend.Sex, &Friend.Achievement, &Friend.Level, &Friend.Grammar, &Friend.Vocabulary, &Friend.Speaking)
 	if err != nil {
 		return nil, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
 	}
-	rowss := usr.db.QueryRowxContext(ctx, `SELECT (id_second, nick, sex) FROM friends_link WHERE id_first = $1;`, id)
+	rowss := usr.db.QueryRowxContext(ctx, `SELECT id_second, nick, sex FROM friends_link WHERE id_first = $1;`, id)
 	err = rowss.Scan(&Friend.FriendsList)
 	if err != nil {
 		return nil, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
@@ -162,14 +166,8 @@ func (usr RepositoryUser) GetFriendByID(ctx context.Context, id int) (*entities.
 func (usr RepositoryUser) GetManByID(ctx context.Context, id int) (*entities.Man, error) {
 	var Man entities.Man
 
-	rows := usr.db.QueryRowContext(ctx, `SELECT (nick, achievement, lvl) FROM users WHERE id = $1;`, id)
+	rows := usr.db.QueryRowContext(ctx, `SELECT nick, achievement, lvl FROM users WHERE id = $1;`, id)
 	err := rows.Scan(&Man.Nick, &Man.Achievement, &Man.Level)
-	if err != nil {
-		return nil, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
-	}
-
-	rowss := usr.db.QueryRowxContext(ctx, `SELECT (id_second, nick, sex) FROM friends_link WHERE id_first = $1;`, id)
-	err = rowss.Scan(&Man.FriendsList)
 	if err != nil {
 		return nil, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
 	}
@@ -183,7 +181,7 @@ func (usr RepositoryUser) GetHshPwddByEmail(ctx context.Context, email string) (
 		id             int
 		hashedPassword string
 	)
-	rows := usr.db.QueryRowContext(ctx, `SELECT (id, hashed_password) FROM users WHERE email = $1`, email)
+	rows := usr.db.QueryRowContext(ctx, `SELECT id, hashed_password FROM users WHERE email = $1`, email)
 	err := rows.Scan(&id, &hashedPassword)
 	if err != nil {
 		return 0, "", cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
@@ -235,14 +233,14 @@ func (usr RepositoryUser) AddFriendByNick(ctx context.Context, nickname int, id 
 		sex       string
 	)
 	//friend
-	rows := usr.db.QueryRowContext(ctx, `SELECT (id, sex) FROM users WHERE name = $1;`, nickname)
+	rows := usr.db.QueryRowContext(ctx, `SELECT id, sex FROM users WHERE name = $1;`, nickname)
 	err := rows.Scan(&friendID, &friendSex)
 	if err != nil {
 		return 0, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
 	}
 
 	//user
-	rowss := usr.db.QueryRowContext(ctx, `SELECT (nick, sex) FROM users WHERE id = $1;`, id)
+	rowss := usr.db.QueryRowContext(ctx, `SELECT nick, sex FROM users WHERE id = $1;`, id)
 	err = rowss.Scan(&name, &sex)
 	if err != nil {
 		return 0, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
@@ -253,7 +251,7 @@ func (usr RepositoryUser) AddFriendByNick(ctx context.Context, nickname int, id 
 	if err != nil {
 		return 0, cerr.Err(cerr.User, cerr.Repository, cerr.Transaction, err).Error()
 	}
-	result, err := transaction.ExecContext(ctx, `INSERT INTO friends_link (id_first, id_second, nick, sex) VALUES ($1, $2, $3, $4)`, friendID, id, name, sex)
+	result, err := transaction.ExecContext(ctx, `INSERT INTO friends_link id_first, id_second, nick, sex VALUES ($1, $2, $3, $4)`, friendID, id, name, sex)
 	if err != nil {
 		if rbErr := transaction.Rollback(); rbErr != nil {
 			return 0, cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
@@ -276,7 +274,7 @@ func (usr RepositoryUser) AddFriendByNick(ctx context.Context, nickname int, id 
 	}
 
 	//--------user
-	result, err = transaction.ExecContext(ctx, `INSERT INTO friends_link (id_first, id_second, nick, sex) VALUES ($1, $2, $3, $4)`, id, friendID, nickname, friendSex)
+	result, err = transaction.ExecContext(ctx, `INSERT INTO friends_link id_first, id_second, nick, sex VALUES ($1, $2, $3, $4)`, id, friendID, nickname, friendSex)
 	if err != nil {
 		if rbErr := transaction.Rollback(); rbErr != nil {
 			return 0, cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
@@ -314,14 +312,14 @@ func (usr RepositoryUser) AddFriendByID(ctx context.Context, friendID int, userI
 	)
 
 	//friend
-	rows := usr.db.QueryRowContext(ctx, `SELECT (nick, sex) FROM users WHERE id = $1;`, friendID)
+	rows := usr.db.QueryRowContext(ctx, `SELECT nick, sex FROM users WHERE id = $1;`, friendID)
 	err := rows.Scan(&friendNick, &friendSex)
 	if err != nil {
 		return cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
 	}
 
 	//user
-	rowss := usr.db.QueryRowContext(ctx, `SELECT (nick, sex) FROM users WHERE id = $1;`, userID)
+	rowss := usr.db.QueryRowContext(ctx, `SELECT nick, sex FROM users WHERE id = $1;`, userID)
 	err = rowss.Scan(&userNick, &userSex)
 	if err != nil {
 		return cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
@@ -332,7 +330,7 @@ func (usr RepositoryUser) AddFriendByID(ctx context.Context, friendID int, userI
 	if err != nil {
 		return cerr.Err(cerr.User, cerr.Repository, cerr.Transaction, err).Error()
 	}
-	result, err := transaction.ExecContext(ctx, `INSERT INTO friends_link (id_first, id_second, nick, sex) VALUES ($1, $2, $3, $4)`, friendID, userID, userNick, userSex)
+	result, err := transaction.ExecContext(ctx, `INSERT INTO friends_link id_first, id_second, nick, sex VALUES ($1, $2, $3, $4)`, friendID, userID, userNick, userSex)
 	if err != nil {
 		if rbErr := transaction.Rollback(); rbErr != nil {
 			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
@@ -355,7 +353,7 @@ func (usr RepositoryUser) AddFriendByID(ctx context.Context, friendID int, userI
 	}
 
 	//--------user
-	result, err = transaction.ExecContext(ctx, `INSERT INTO friends_link (id_first, id_second, nick, sex) VALUES ($1, $2, $3, $4)`, userID, friendID, friendNick, friendSex)
+	result, err = transaction.ExecContext(ctx, `INSERT INTO friends_link id_first, id_second, nick, sex VALUES ($1, $2, $3, $4)`, userID, friendID, friendNick, friendSex)
 	if err != nil {
 		if rbErr := transaction.Rollback(); rbErr != nil {
 			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()

@@ -339,7 +339,7 @@ func (handler HandlerUser) FriendsList(g *gin.Context) {
 		g.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
 	defer cancel()
 
 	list, err := handler.service.GetFriendsList(ctx, id)

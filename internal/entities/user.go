@@ -46,11 +46,10 @@ type FriendsList struct {
 }
 
 type Man struct {
-	ID          int      `json:"id"`
-	Nick        string   `json:"nick"`
-	Level       int      `json:"level"`
-	Achievement int      `json:"achievement"`
-	FriendsList []Friend `json:"friendsList"`
+	ID          int    `json:"id"`
+	Nick        string `json:"nick"`
+	Level       int    `json:"level"`
+	Achievement int    `json:"achievement"`
 }
 
 type UserAddFriend struct {
