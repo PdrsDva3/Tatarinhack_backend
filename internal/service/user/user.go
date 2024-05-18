@@ -192,7 +192,7 @@ func (usr RepositoryUser) AchievementUp(ctx context.Context, id int) error {
 }
 
 func (usr RepositoryUser) GetFriendsList(ctx context.Context, id int) ([]entities.FriendsList, error) {
-	friendsList, err := usr.GetFriendsList(ctx, id)
+	friendsList, err := usr.UserRepo.GetFriendsList(ctx, id)
 	if err != nil {
 		return nil, err
 	}
