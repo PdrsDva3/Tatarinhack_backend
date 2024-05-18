@@ -28,7 +28,10 @@ func InitConfig() {
 
 	//fmt.Println(viper.GetString(DBHost))
 
+	viper.AutomaticEnv()
+
 	err := viper.ReadInConfig()
+	fmt.Println(viper.GetString(DBHost))
 	if err != nil {
 		panic(fmt.Sprintf("Config initialization error: %v", err.Error()))
 	}
