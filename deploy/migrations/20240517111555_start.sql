@@ -22,7 +22,9 @@ CREATE TABLE IF NOT EXISTS users
 CREATE TABLE IF NOT EXISTS friends_link
 (
     id_first  INTEGER REFERENCES users (id),
-    id_second INTEGER REFERENCES users (id)
+    id_second INTEGER REFERENCES users (id),
+    nick varchar references users(nick),
+    sex varchar
 );
 
 CREATE TABLE IF NOT EXISTS teachers
@@ -58,18 +60,25 @@ CREATE TABLE IF NOT EXISTS theory
     description VARCHAR
 );
 
+
+CREATE TABLE IF NOT EXISTS audios
+(
+    id             SERIAL NOT NULL PRIMARY KEY,
+    correct_answer VARCHAR
+);
+
 CREATE TABLE IF NOT EXISTS questions
 (
     id          SERIAL NOT NULL PRIMARY KEY,
     name        VARCHAR,
-    description VARCHAR,
-    count_a     int
+    description VARCHAR
 );
 
 CREATE TABLE IF NOT EXISTS answers
 (
-    id   SERIAL NOT NULL PRIMARY KEY,
-    name VARCHAR
+    id         SERIAL NOT NULL PRIMARY KEY,
+    name       VARCHAR,
+    is_correct bool
 );
 
 
@@ -91,11 +100,16 @@ CREATE TABLE IF NOT EXISTS questions_tests
     id_questions INTEGER REFERENCES questions (id)
 );
 
+CREATE TABLE IF NOT EXISTS audios_tests
+(
+    id_tests INTEGER REFERENCES tests (id),
+    id_audio INTEGER REFERENCES audios (id)
+);
+
 CREATE TABLE IF NOT EXISTS answers_questions
 (
     id_answer   INTEGER REFERENCES answers (id),
-    id_question INTEGER REFERENCES questions (id),
-    is_correct  bool
+    id_question INTEGER REFERENCES questions (id)
 );
 
 -- +goose StatementEnd
@@ -105,6 +119,8 @@ CREATE TABLE IF NOT EXISTS answers_questions
 drop table friends_link;
 drop table users;
 drop table teachers;
+drop table audios_tests;
+drop table audios;
 drop table courses_tests;
 drop table courses;
 drop table theory_tests;

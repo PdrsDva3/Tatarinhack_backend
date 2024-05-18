@@ -5,7 +5,7 @@ type TestBase struct {
 	Type      string     `json:"type"`
 	Level     int        `json:"level"`
 	Speed     string     `json:"speed"`
-	Questions []Question `json:"questions"`
+	Questions []Question `json:"questions" `
 	//CountQ    int    `json:"count_questions"`
 }
 
