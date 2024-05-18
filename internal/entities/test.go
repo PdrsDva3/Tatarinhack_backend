@@ -5,7 +5,7 @@ type TestBase struct {
 	Type      string     `json:"type"`
 	Level     int        `json:"level"`
 	Speed     string     `json:"speed"`
-	Questions []Question `json:"questions"`
+	Questions []Question `json:"questions" `
 	//CountQ    int    `json:"count_questions"`
 }
 
@@ -17,4 +17,9 @@ type Test struct {
 type TestGet struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
+}
+
+type TestAdd struct {
+	IDQuestion int `json:"id_question"`
+	IDTest     int `json:"id_test"`
 }

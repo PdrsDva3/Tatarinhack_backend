@@ -14,6 +14,7 @@ const (
 	Course   UserType = "Course"
 	Test     UserType = "Test"
 	Question UserType = "Question"
+	Answer   UserType = "Answer"
 )
 
 // LayerType определяет тип слоя
