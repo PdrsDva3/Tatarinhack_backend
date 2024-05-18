@@ -63,7 +63,7 @@ func (cou RepositoryCourse) GetByID(ctx context.Context, id int) (*entities.Cour
 		if err != nil {
 			return nil, cerr.Err(cerr.Test, cerr.Repository, cerr.Scan, err).Error()
 		}
-		question.ID = id
+		question.ID = i
 		course.Tests = append(course.Tests, question)
 	}
 	return &course, nil

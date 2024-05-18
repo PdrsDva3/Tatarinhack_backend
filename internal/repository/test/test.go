@@ -52,6 +52,9 @@ func (que RepositoryTest) GetByID(ctx context.Context, id int) (*entities.Test, 
 	var ids []int
 	rowss := que.db.QueryRowxContext(ctx, `SELECT id_questions FROM questions_tests WHERE id_tests = $1;`, id)
 	err = rowss.Scan(&ids)
+	if err != nil {
+		return nil, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
+	}
 	for _, i := range ids {
 		var question entities.Question
 		rows := que.db.QueryRowContext(ctx, `SELECT name, description from questions WHERE id = $1;`, i)
@@ -59,11 +62,8 @@ func (que RepositoryTest) GetByID(ctx context.Context, id int) (*entities.Test, 
 		if err != nil {
 			return nil, cerr.Err(cerr.Question, cerr.Repository, cerr.Scan, err).Error()
 		}
-		question.ID = id
+		question.ID = i
 		test.Questions = append(test.Questions, question)
-	}
-	if err != nil {
-		return nil, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
 	}
 
 	return &test, nil
