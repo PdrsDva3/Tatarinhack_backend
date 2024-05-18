@@ -52,7 +52,7 @@ func (ans RepositoryAnswer) GetByID(ctx context.Context, id int) (*entities.Answ
 	return &answer, nil
 }
 
-func (ans RepositoryAnswer) ChangeCorrect(ctx context.Context, id int) error {
+func (ans RepositoryAnswer) ChangeCorrect(ctx context.Context, id int, value bool) error {
 	var correct bool
 	rows := ans.db.QueryRowContext(ctx, `SELECT is_correct from answers WHERE id = $1;`, id)
 	err := rows.Scan(&correct)
@@ -63,7 +63,7 @@ func (ans RepositoryAnswer) ChangeCorrect(ctx context.Context, id int) error {
 	if err != nil {
 		return cerr.Err(cerr.Answer, cerr.Repository, cerr.Transaction, err).Error()
 	}
-	result, err := transaction.ExecContext(ctx, `UPDATE answers SET is_correct=$2 WHERE id=$1;`, id, !correct)
+	result, err := transaction.ExecContext(ctx, `UPDATE answers SET is_correct=$2 WHERE id=$1;`, id, value)
 	if err != nil {
 		if rbErr := transaction.Rollback(); rbErr != nil {
 			return cerr.Err(cerr.Answer, cerr.Repository, cerr.Rollback, rbErr).Error()
@@ -95,12 +95,12 @@ func (ans RepositoryAnswer) ChangeCorrect(ctx context.Context, id int) error {
 	return nil
 }
 
-func (ans RepositoryAnswer) Delete(ctx context.Context, id int) error {
+func (ans RepositoryAnswer) Delete(ctx context.Context, idAns int, idQue int) error {
 	transaction, err := ans.db.BeginTxx(ctx, nil)
 	if err != nil {
 		return cerr.Err(cerr.Answer, cerr.Repository, cerr.Transaction, err).Error()
 	}
-	result, err := transaction.ExecContext(ctx, `DELETE FROM answers WHERE id=$1;`, id)
+	result, err := transaction.ExecContext(ctx, `DELETE FROM answers_questions WHERE id_answer=$1 and id_question=$2;`, idAns, idQue)
 	if err != nil {
 		if rbErr := transaction.Rollback(); rbErr != nil {
 			return cerr.Err(cerr.Answer, cerr.Repository, cerr.Rollback, rbErr).Error()

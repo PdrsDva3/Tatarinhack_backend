@@ -16,8 +16,8 @@ type TeachRepo interface {
 type AnswerRepo interface {
 	Create(ctx context.Context, answer entities.AnswerBase) (int, error)
 	GetByID(ctx context.Context, id int) (*entities.Answer, error)
-	ChangeCorrect(ctx context.Context, id int) error
-	Delete(ctx context.Context, id int) error
+	ChangeCorrect(ctx context.Context, id int, value bool) error
+	Delete(ctx context.Context, idAns int, idQue int) error
 }
 
 type QuestionRepo interface {

@@ -9,5 +9,7 @@ import (
 
 func InitRouting(r *gin.Engine, db *sqlx.DB, logger *logger.Logs, middlewareStruct middleware.Middleware) {
 	_ = RegisterTeachRouter(r, db, logger)
-
+	_ = RegisterAnswerRouter(r, db, logger)
+	_ = RegisterQuestionRouter(r, db, logger)
+	_ = RegisterTestRouter(r, db, logger)
 }

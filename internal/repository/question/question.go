@@ -43,12 +43,28 @@ func (que RepositoryQuestion) Create(ctx context.Context, question entities.Ques
 
 func (que RepositoryQuestion) GetByID(ctx context.Context, id int) (*entities.Question, error) {
 	var question entities.Question
+	var ans entities.Ans
+	var ids []int
 	rows := que.db.QueryRowContext(ctx, `SELECT name, description from questions WHERE id = $1;`, id)
 	err := rows.Scan(&question.Name, &question.Description)
 	if err != nil {
 		return nil, cerr.Err(cerr.Question, cerr.Repository, cerr.Scan, err).Error()
 	}
 	question.ID = id
+
+	err = que.db.SelectContext(ctx, &ids, "SELECT id_answer FROM answers_questions where id_question=$1", id)
+	if err != nil {
+		return nil, cerr.Err(cerr.Question, cerr.Repository, cerr.Scan, err).Error()
+	}
+	for _, i := range ids {
+		rows := que.db.QueryRowContext(ctx, `SELECT name, is_correct from answers WHERE id = $1;`, i)
+		err := rows.Scan(&ans.Name, &ans.IsCorrect)
+		ans.ID = i
+		if err != nil {
+			return nil, cerr.Err(cerr.Question, cerr.Repository, cerr.Scan, err).Error()
+		}
+		question.Answers = append(question.Answers, ans)
+	}
 	return &question, nil
 }
 

@@ -18,3 +18,8 @@ type TestGet struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
 }
+
+type TestAdd struct {
+	IDQuestion int `json:"id_question"`
+	IDTest     int `json:"id_test"`
+}

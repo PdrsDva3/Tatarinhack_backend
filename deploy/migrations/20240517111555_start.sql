@@ -10,13 +10,12 @@ CREATE TABLE IF NOT EXISTS users
     hashed_password VARCHAR,
     goal            VARCHAR,
     sex             varchar,
-    grammar         int,
-    vocabulary      int,
-    speaking        int,
-    rating          int,
-    lvl             int,
-    days            int,
-    achievement     int
+    grammar         int default 0,
+    vocabulary      int default 0,
+    speaking        int default 0,
+    lvl             int default 0,
+    days            int default 0,
+    achievement     int default 0
 );
 
 CREATE TABLE IF NOT EXISTS friends_link

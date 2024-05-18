@@ -41,29 +41,44 @@ func (que RepositoryTest) Create(ctx context.Context, test entities.TestBase) (i
 	return id, nil
 }
 
-func (que RepositoryTest) GetByID(ctx context.Context, id int) (*entities.Test, error) {
+func (tst RepositoryTest) GetByID(ctx context.Context, id int) (*entities.Test, error) {
 	var test entities.Test
-	rows := que.db.QueryRowContext(ctx, `SELECT (name, type, level, speed) from tests WHERE id = $1;`, id)
+	rows := tst.db.QueryRowContext(ctx, `SELECT name, type, level, speed from tests WHERE id = $1;`, id)
 	err := rows.Scan(&test.Name, &test.Type, &test.Level, &test.Speed)
 	if err != nil {
 		return nil, cerr.Err(cerr.Test, cerr.Repository, cerr.Scan, err).Error()
 	}
 	test.ID = id
 	var ids []int
-	rowss := que.db.QueryRowxContext(ctx, `SELECT id_questions FROM questions_tests WHERE id_tests = $1;`, id)
-	err = rowss.Scan(&ids)
+	var ids2 []int
+	var que entities.Question
+
+	err = tst.db.SelectContext(ctx, &ids, "SELECT id_questions FROM questions_tests where id_tests=$1", id)
 	if err != nil {
-		return nil, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
+		return nil, cerr.Err(cerr.Test, cerr.Repository, cerr.Scan, err).Error()
 	}
 	for _, i := range ids {
-		var question entities.Question
-		rows := que.db.QueryRowContext(ctx, `SELECT name, description from questions WHERE id = $1;`, i)
-		err := rows.Scan(&question.Name, &question.Description)
+		rows := tst.db.QueryRowContext(ctx, `SELECT name, description from questions WHERE id = $1;`, i)
+		err := rows.Scan(&que.Name, &que.Description)
 		if err != nil {
-			return nil, cerr.Err(cerr.Question, cerr.Repository, cerr.Scan, err).Error()
+			return nil, cerr.Err(cerr.Test, cerr.Repository, cerr.Scan, err).Error()
 		}
-		question.ID = i
-		test.Questions = append(test.Questions, question)
+		que.ID = i
+		err = tst.db.SelectContext(ctx, &ids2, "SELECT id_answer FROM answers_questions where id_question=$1", i)
+		if err != nil {
+			return nil, cerr.Err(cerr.Test, cerr.Repository, cerr.Scan, err).Error()
+		}
+		for _, j := range ids2 {
+			var ans entities.Ans
+			rows := tst.db.QueryRowContext(ctx, `SELECT name, is_correct from answers WHERE id = $1;`, j)
+			err := rows.Scan(&ans.Name, &ans.IsCorrect)
+			ans.ID = i
+			if err != nil {
+				return nil, cerr.Err(cerr.Question, cerr.Repository, cerr.Scan, err).Error()
+			}
+			que.Answers = append(que.Answers, ans)
+		}
+		test.Questions = append(test.Questions, que)
 	}
 
 	return &test, nil
