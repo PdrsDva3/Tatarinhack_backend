@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS users
     grammar         int default 0,
     vocabulary      int default 0,
     speaking        int default 0,
+    rating         int default 0,
     lvl             int default 0,
     days            int default 0,
     achievement     int default 0
@@ -22,8 +23,8 @@ CREATE TABLE IF NOT EXISTS friends_link
 (
     id_first  INTEGER REFERENCES users (id),
     id_second INTEGER REFERENCES users (id),
-    nick varchar references users(nick),
-    sex varchar
+    nick      varchar references users (nick),
+    sex       varchar
 );
 
 CREATE TABLE IF NOT EXISTS teachers
