@@ -3,9 +3,10 @@ package delivery
 import (
 	"Tatarinhack_backend/docs"
 	"Tatarinhack_backend/internal/delivery/handlers"
-	"Tatarinhack_backend/internal/delivery/middleware"
 	"Tatarinhack_backend/internal/repository/user"
 	userserv "Tatarinhack_backend/internal/service/user"
+	"Tatarinhack_backend/internal/delivery/middleware"
+	"Tatarinhack_backend/internal/delivery/routers"
 	"Tatarinhack_backend/pkg/logger"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -18,7 +19,6 @@ import (
 func Start(db *sqlx.DB, logger *logger.Logs) {
 	r := gin.Default()
 	r.ForwardedByClientIP = true
-
 	docs.SwaggerInfo.BasePath = "/"
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
@@ -46,6 +46,8 @@ func Start(db *sqlx.DB, logger *logger.Logs) {
 	//userRouter.PUT("/:id", userHandler.) // UpdAchievment
 	//userRouter.PUT("/:id", userHandler.) // UpdDays
 	userRouter.PUT("/lvl/:id", userHandler.LevelUp) // UpdLevel
+\
+	routers.InitRouting(r, db, logger, middlewareStruct)
 
 	if err := r.Run("0.0.0.0:8080"); err != nil {
 		panic(fmt.Sprintf("error running client: %v", err.Error()))

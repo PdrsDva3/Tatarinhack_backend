@@ -1,7 +1,7 @@
 package entities
 
 type TeachBase struct {
-	Nick  int64  `json:"nick"`
+	Nick  string `json:"nick"`
 	Email string `json:"email"`
 }
 
@@ -11,7 +11,7 @@ type TeachCreate struct {
 }
 
 type TeachLogin struct {
-	Email    int64  `json:"email"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
