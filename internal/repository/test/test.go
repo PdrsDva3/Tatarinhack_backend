@@ -17,6 +17,10 @@ func InitTestRepository(db *sqlx.DB) repository.TestRepo {
 		db}
 }
 
+func (que RepositoryTest) RetDB(ctx context.Context) *sqlx.DB {
+	return que.db
+}
+
 func (que RepositoryTest) Create(ctx context.Context, test entities.TestBase) (int, error) {
 	var id int
 	transaction, err := que.db.BeginTxx(ctx, nil)

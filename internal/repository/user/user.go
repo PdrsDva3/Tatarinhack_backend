@@ -68,27 +68,21 @@ func (usr RepositoryUser) GetSpeaking(ctx context.Context, id int) (int, error) 
 func (usr RepositoryUser) GetFriendList(ctx context.Context, id int) ([]entities.FriendsList, error) {
 	var list []entities.FriendsList
 	var ids []int
-	rowss := usr.db.QueryRowxContext(ctx, `SELECT id_second FROM friends_link WHERE id_first = $1;`, id)
-	err := rowss.Scan(&ids)
+	err := usr.db.SelectContext(ctx, &ids, "SELECT id_second FROM friends_link where id_first=$1", id)
 	if err != nil {
-		return nil, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
+		return nil, cerr.Err(cerr.Test, cerr.Repository, cerr.Scan, err).Error()
 	}
-	if ids != nil {
-		for _, i := range ids {
-			var friend entities.FriendsList
-			rows := usr.db.QueryRowContext(ctx, `SELECT nick, sex from friends_link WHERE id = $1;`, i)
-			err := rows.Scan(&friend.Nick, &friend.Sex)
-			if err != nil {
-				return nil, cerr.Err(cerr.Question, cerr.Repository, cerr.Scan, err).Error()
-			}
-			friend.ID = i
-			list = append(list, friend)
+	for _, i := range ids {
+		var friend entities.FriendsList
+		rows := usr.db.QueryRowContext(ctx, `SELECT nick, sex from users WHERE id = $1;`, i)
+		err := rows.Scan(&friend.Nick, &friend.Sex)
+		if err != nil {
+			return nil, cerr.Err(cerr.Test, cerr.Repository, cerr.Scan, err).Error()
 		}
-		return list, nil
-	} else {
-		return nil, nil
+		friend.ID = i
+		list = append(list, friend)
 	}
-
+	return list, nil
 }
 
 func (usr RepositoryUser) Create(ctx context.Context, user entities.UserCreate) (int, error) {

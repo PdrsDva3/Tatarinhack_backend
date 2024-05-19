@@ -23,3 +23,8 @@ type TestAdd struct {
 	IDQuestion int `json:"id_question"`
 	IDTest     int `json:"id_test"`
 }
+
+type TestAnswer struct {
+	UserID   int    `json:"user_id"`
+	AnswerID []bool `json:"answer_id"`
+}

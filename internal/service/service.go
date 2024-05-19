@@ -49,4 +49,10 @@ type TestService interface {
 	Create(ctx context.Context, test entities.TestBase) (int, error)
 	GetMe(ctx context.Context, testID int) (*entities.Test, error)
 	AddTest(ctx context.Context, queID int, testID int) error
+	TestAnswer(ctx context.Context, answer entities.TestAnswer) (int, error)
+}
+
+type FightService interface {
+	Get(ctx context.Context, id int) (*entities.Test, int, error)
+	Post(ctx context.Context, answer *entities.FightStart) error
 }
