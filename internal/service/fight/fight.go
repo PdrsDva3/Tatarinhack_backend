@@ -23,8 +23,14 @@ func (f FightService) Get(ctx context.Context, id int) (*entities.Test, int, err
 	return out, pp, nil
 }
 
-func (f FightService) Post(ctx context.Context, value int) error {
-	_, err := f.TestRepo.SaveRes(ctx, value)
+func (f FightService) Post(ctx context.Context, answer *entities.FightStart) error {
+	i := 0
+	for _, el := range answer.AnswerID {
+		if el {
+			i += 1
+		}
+	}
+	_, err := f.TestRepo.SaveRes(ctx, i)
 	if err != nil {
 		return err
 	}

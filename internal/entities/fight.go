@@ -10,5 +10,5 @@ type Fight struct {
 }
 
 type FightStart struct {
-	Pupa int `json:popa`
+	AnswerID []bool `json:"answer_id"`
 }

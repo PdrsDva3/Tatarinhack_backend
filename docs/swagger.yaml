@@ -24,8 +24,10 @@ definitions:
     type: object
   entities.FightStart:
     properties:
-      pupa:
-        type: integer
+      answer_id:
+        items:
+          type: boolean
+        type: array
     type: object
   entities.Question:
     properties:

@@ -52,5 +52,5 @@ type TestService interface {
 
 type FightService interface {
 	Get(ctx context.Context, id int) (*entities.Test, int, error)
-	Post(ctx context.Context, value int) error
+	Post(ctx context.Context, answer *entities.FightStart) error
 }

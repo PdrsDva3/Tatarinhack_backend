@@ -65,7 +65,7 @@ func (p FightHandler) Post(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*4)
 	defer cancel()
 
-	err := p.service.Post(ctx, answerCreate.Pupa)
+	err := p.service.Post(ctx, &answerCreate)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

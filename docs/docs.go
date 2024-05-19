@@ -1556,8 +1556,11 @@ const docTemplate = `{
         "entities.FightStart": {
             "type": "object",
             "properties": {
-                "pupa": {
-                    "type": "integer"
+                "answer_id": {
+                    "type": "array",
+                    "items": {
+                        "type": "boolean"
+                    }
                 }
             }
         },
