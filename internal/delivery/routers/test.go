@@ -20,5 +20,7 @@ func RegisterTestRouter(r *gin.Engine, db *sqlx.DB, logs *logger.Logs) *gin.Rout
 	TestRouter.POST("/create", TestHandler.CreateTest)
 	TestRouter.GET("/:id", TestHandler.GetTest)
 	TestRouter.PUT("/add", TestHandler.AddTest)
+	TestRouter.POST("/answer", TestHandler.TestAnswer)
+
 	return TestRouter
 }

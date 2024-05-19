@@ -166,6 +166,106 @@ const docTemplate = `{
                 }
             }
         },
+        "/fight/create": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "fight"
+                ],
+                "summary": "Create answer",
+                "parameters": [
+                    {
+                        "description": "answer create",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.FightStart"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully created answer",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/fight/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "fight"
+                ],
+                "summary": "Get answer",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "AnswerID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully get answer",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/question/add": {
             "put": {
                 "consumes": [
@@ -594,6 +694,57 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "Successfully add test",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/test/answer": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "summary": "put answer test",
+                "parameters": [
+                    {
+                        "description": "test answer",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.TestAnswer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully test",
                         "schema": {
                             "type": "integer"
                         }
@@ -1402,6 +1553,14 @@ const docTemplate = `{
                 }
             }
         },
+        "entities.FightStart": {
+            "type": "object",
+            "properties": {
+                "pupa": {
+                    "type": "integer"
+                }
+            }
+        },
         "entities.Question": {
             "type": "object",
             "properties": {
@@ -1493,6 +1652,20 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "id_test": {
+                    "type": "integer"
+                }
+            }
+        },
+        "entities.TestAnswer": {
+            "type": "object",
+            "properties": {
+                "answer_id": {
+                    "type": "array",
+                    "items": {
+                        "type": "boolean"
+                    }
+                },
+                "user_id": {
                     "type": "integer"
                 }
             }

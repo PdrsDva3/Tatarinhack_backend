@@ -5,7 +5,9 @@ import (
 	"Tatarinhack_backend/internal/delivery/handlers"
 	"Tatarinhack_backend/internal/delivery/middleware"
 	"Tatarinhack_backend/internal/delivery/routers"
+	"Tatarinhack_backend/internal/repository/fight"
 	"Tatarinhack_backend/internal/repository/user"
+	fightserv "Tatarinhack_backend/internal/service/fight"
 	userserv "Tatarinhack_backend/internal/service/user"
 	"Tatarinhack_backend/pkg/logger"
 	"fmt"
@@ -24,6 +26,14 @@ func Start(db *sqlx.DB, logger *logger.Logs) {
 
 	middlewareStruct := middleware.InitMiddleware(logger)
 	r.Use(middlewareStruct.CORSMiddleware())
+
+	fightRouter := r.Group("/fight")
+
+	fightRepo := fight.InitFightRepository(db)
+	fightService := fightserv.InitFightService(fightRepo)
+	fightHandler := handlers.InitFightHandler(fightService)
+	fightRouter.POST("/create", fightHandler.Post)
+	fightRouter.GET("/:id", fightHandler.GetFight)
 
 	userRouter := r.Group("/user")
 

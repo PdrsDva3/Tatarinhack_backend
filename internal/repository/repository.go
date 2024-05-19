@@ -3,8 +3,8 @@ package repository
 import (
 	"Tatarinhack_backend/internal/entities"
 	"context"
+	"github.com/jmoiron/sqlx"
 )
-
 
 type UserRepo interface {
 	Create(ctx context.Context, user entities.UserCreate) (int, error)         // id, err
@@ -29,7 +29,7 @@ type UserRepo interface {
 	UpdateAchievementByID(ctx context.Context, id int, amount int) error    //new value, err
 	Delete(ctx context.Context, id int) error                               // err
 }
-  
+
 type TeachRepo interface {
 	Create(ctx context.Context, teach entities.TeachCreate) (int, error)
 	GetByID(ctx context.Context, id int) (*entities.Teach, error)
@@ -57,6 +57,7 @@ type TestRepo interface {
 	GetByID(ctx context.Context, id int) (*entities.Test, error)
 	AddQ(ctx context.Context, idTest int, idQue int) error
 	DeleteQ(ctx context.Context, idTest int, idQue int) error
+	RetDB(ctx context.Context) *sqlx.DB
 }
 
 type CourseRepo interface {
@@ -64,5 +65,14 @@ type CourseRepo interface {
 	GetByID(ctx context.Context, id int) (*entities.Course, error)
 	AddT(ctx context.Context, idTest int, idQue int) error
 	DeleteT(ctx context.Context, idTest int, idQue int) error
+}
 
+type AudioRepo interface {
+	Create(ctx context.Context, audio entities.AudioBase) (int, error)
+	GetByID(ctx context.Context, id int) (*entities.Audio, error)
+}
+
+type FightRepo interface {
+	SaveRes(ctx context.Context, value int) (*entities.Fight, error)
+	GetByID(ctx context.Context, id int) (*entities.Test, int, error)
 }

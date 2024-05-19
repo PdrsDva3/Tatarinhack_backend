@@ -22,6 +22,11 @@ definitions:
       value:
         type: boolean
     type: object
+  entities.FightStart:
+    properties:
+      pupa:
+        type: integer
+    type: object
   entities.Question:
     properties:
       answers:
@@ -81,6 +86,15 @@ definitions:
       id_question:
         type: integer
       id_test:
+        type: integer
+    type: object
+  entities.TestAnswer:
+    properties:
+      answer_id:
+        items:
+          type: boolean
+        type: array
+      user_id:
         type: integer
     type: object
   entities.TestBase:
@@ -233,6 +247,71 @@ paths:
       summary: Create answer
       tags:
       - answer
+  /fight/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: AnswerID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully get answer
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get answer
+      tags:
+      - fight
+  /fight/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: answer create
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.FightStart'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully created answer
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create answer
+      tags:
+      - fight
   /question/{id}:
     get:
       consumes:
@@ -557,6 +636,39 @@ paths:
               type: string
             type: object
       summary: Add que to test
+      tags:
+      - test
+  /test/answer:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: test answer
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.TestAnswer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully test
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: put answer test
       tags:
       - test
   /test/create:
