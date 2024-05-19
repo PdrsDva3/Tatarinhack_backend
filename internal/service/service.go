@@ -5,7 +5,6 @@ import (
 	"context"
 )
 
-
 type UserService interface {
 	Create(ctx context.Context, user entities.UserCreate) (int, error)          //done
 	Login(ctx context.Context, user entities.UserLogin) (*entities.User, error) //done
@@ -22,6 +21,8 @@ type UserService interface {
 	LevelUp(ctx context.Context, id int) error
 	AchievementUp(ctx context.Context, id int) error
 	GetFriendsList(ctx context.Context, id int) ([]entities.FriendsList, error)
+	GetEchp(ctx context.Context, id int) (int, error)
+	UpdEchp(ctx context.Context, id int, cnt_p int) error
 }
 
 type TeachService interface {

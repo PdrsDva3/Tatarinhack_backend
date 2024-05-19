@@ -68,6 +68,7 @@ type User struct {
 	Days        int           `json:"days"`
 	FriendsList []FriendsList `json:"friendsList"`
 	Achievement int           `json:"achievement"`
+	Echp        int           `json:"echp"`
 }
 
 type UserUpGrammar struct {

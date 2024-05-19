@@ -18,6 +18,22 @@ func InitUserRepo(userRepo repository.UserRepo) service.UserService {
 		UserRepo: userRepo}
 }
 
+func (usr RepositoryUser) GetEchp(ctx context.Context, id int) (int, error) {
+	cnt, err := usr.UserRepo.GetEchp(ctx, id)
+	if err != nil {
+		return 0, err
+	}
+	return cnt, nil
+}
+
+func (usr RepositoryUser) UpdEchp(ctx context.Context, id int, cnt_p int) error {
+	err := usr.UserRepo.UpdEchp(ctx, id, cnt_p)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (usr RepositoryUser) Create(ctx context.Context, user entities.UserCreate) (int, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
 	if err != nil {

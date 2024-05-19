@@ -118,9 +118,9 @@ func (usr RepositoryUser) Create(ctx context.Context, user entities.UserCreate) 
 
 func (usr RepositoryUser) Get(ctx context.Context, id int) (*entities.User, error) {
 	var OldUser entities.User
-	rows := usr.db.QueryRowContext(ctx, `SELECT nick, email, goal, sex, rating, grammar, vocabulary, speaking, lvl, days, achievement FROM users WHERE id = $1;`, id)
+	rows := usr.db.QueryRowContext(ctx, `SELECT nick, email, goal, sex, rating, grammar, vocabulary, speaking, lvl, days, achievement, cnt FROM users WHERE id = $1;`, id)
 
-	err := rows.Scan(&OldUser.Nick, &OldUser.Email, &OldUser.Goal, &OldUser.Sex, &OldUser.Rating, &OldUser.Grammar, &OldUser.Vocabulary, &OldUser.Speaking, &OldUser.Level, &OldUser.Days, &OldUser.Achievement)
+	err := rows.Scan(&OldUser.Nick, &OldUser.Email, &OldUser.Goal, &OldUser.Sex, &OldUser.Rating, &OldUser.Grammar, &OldUser.Vocabulary, &OldUser.Speaking, &OldUser.Level, &OldUser.Days, &OldUser.Achievement, &OldUser.Echp)
 	if err != nil {
 		return nil, cerr.Err(cerr.Test, cerr.Repository, cerr.Scan, err).Error()
 	}
@@ -636,5 +636,60 @@ func (usr RepositoryUser) Delete(ctx context.Context, id int) error {
 		return cerr.Err(cerr.User, cerr.Repository, cerr.Commit, err).Error()
 	}
 
+	return nil
+}
+
+func (usr RepositoryUser) GetEchp(ctx context.Context, id int) (int, error) {
+	var cnt int
+	rows := usr.db.QueryRowContext(ctx, `SELECT cnt from users where id=$1;`, id)
+	err := rows.Scan(&cnt)
+	if err != nil {
+		return 0, err
+	}
+
+	return cnt, nil
+}
+
+func (usr RepositoryUser) UpdEchp(ctx context.Context, id int, p_cnt int) error {
+	var cnt int
+	rows := usr.db.QueryRowContext(ctx, `SELECT cnt from users where id=$1;`, id)
+	err := rows.Scan(&cnt)
+	if err != nil {
+		return err
+	}
+
+	transaction, err := usr.db.BeginTxx(ctx, nil)
+	if err != nil {
+		return err
+	}
+
+	result, err := transaction.ExecContext(ctx, `UPDATE users set cnt=$2 where id=$1`, id, p_cnt)
+	if err != nil {
+		if err := transaction.Rollback(); err != nil {
+			return err
+		}
+		return err
+	}
+	count, err := result.RowsAffected()
+	if err != nil {
+		if rbErr := transaction.Rollback(); rbErr != nil {
+			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
+		}
+		return cerr.Err(cerr.User, cerr.Repository, cerr.Rows, err).Error()
+	}
+
+	if count != 1 {
+		if rbErr := transaction.Rollback(); rbErr != nil {
+			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
+		}
+		return cerr.Err(cerr.User, cerr.Repository, cerr.NoOneRow, err).Error()
+	}
+
+	if err := transaction.Commit(); err != nil {
+		if rbErr := transaction.Rollback(); rbErr != nil {
+			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
+		}
+		return cerr.Err(cerr.User, cerr.Repository, cerr.Commit, err).Error()
+	}
 	return nil
 }

@@ -5,7 +5,6 @@ import (
 	"context"
 )
 
-
 type UserRepo interface {
 	Create(ctx context.Context, user entities.UserCreate) (int, error)         // id, err
 	Get(ctx context.Context, id int) (*entities.User, error)                   //
@@ -28,8 +27,10 @@ type UserRepo interface {
 	UpdateDaysByID(ctx context.Context, id int, amount int) error           //new value, err
 	UpdateAchievementByID(ctx context.Context, id int, amount int) error    //new value, err
 	Delete(ctx context.Context, id int) error                               // err
+	GetEchp(ctx context.Context, id int) (int, error)
+	UpdEchp(ctx context.Context, id int, cnt_p int) error
 }
-  
+
 type TeachRepo interface {
 	Create(ctx context.Context, teach entities.TeachCreate) (int, error)
 	GetByID(ctx context.Context, id int) (*entities.Teach, error)
@@ -64,5 +65,4 @@ type CourseRepo interface {
 	GetByID(ctx context.Context, id int) (*entities.Course, error)
 	AddT(ctx context.Context, idTest int, idQue int) error
 	DeleteT(ctx context.Context, idTest int, idQue int) error
-
 }
